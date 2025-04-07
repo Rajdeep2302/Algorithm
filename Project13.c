@@ -4,16 +4,7 @@
 
 int complexity = 0;
 
-void Insert_Data(int **array, int *size) {
-    complexity++;
-    *size += 1;
-    *array = (int *)realloc(*array, (*size + 1) * sizeof(int)); // +1 for 1-based index
-
-    printf("Enter the value to insert: ");
-    int value;
-    scanf("%d", &value);
-    (*array)[*size] = value;
-
+void heapIfy(int **array, int *size){
     int i = *size;
     while (i > 1 && (*array)[i] > (*array)[i / 2]) {
         complexity++;
@@ -22,6 +13,32 @@ void Insert_Data(int **array, int *size) {
         (*array)[i / 2] = temp;
         i = i / 2;
     }
+}
+
+void Insert_Data(int **array, int *size) {
+    complexity++;
+    *size += 1;
+    *array = (int *)realloc(*array, (*size + 1) * sizeof(int));
+
+    printf("Enter the value to insert: ");
+    int value;
+    scanf("%d", &value);
+    (*array)[*size] = value;
+
+    heapIfy(array, size);
+}
+
+void delete_Data(int **array, int *size) {
+    if (*size == 0) {
+        printf("Heap is empty.\n");
+        return;
+    }
+
+    (*array)[1] = (*array)[*size];
+    *size -= 1;
+    *array = (int *)realloc(*array, (*size + 1) * sizeof(int));
+    
+    heapIfy(array, size);
 }
 
 void display(int array[], int size) {
@@ -53,6 +70,7 @@ int main() {
         printf("1. Press 'i' or 'I' to insert data.\n");
         printf("2. Press 'e' or 'E' to exit the program.\n");
         printf("3. Press 'd' or 'D' to display the heap.\n");
+        printf("4. Press 'r' or 'R' to delete data.\n");
         printf("Enter your choice: ");
 
         // Consume newline before reading a character
@@ -60,6 +78,9 @@ int main() {
 
         if (key == 'i' || key == 'I') {
             Insert_Data(&array, &size);
+            wrongKeyCount = 0;
+        } else if (key == 'r' || key == 'R') {
+            delete_Data(&array, &size);
             wrongKeyCount = 0;
         } else if (key == 'e' || key == 'E') {
             printf("Exiting the program.\n");
