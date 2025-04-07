@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int complexity = 0;
+
 void Insert_Data(int **array, int *size) {
+    complexity++;
     *size += 1;
     *array = (int *)realloc(*array, (*size + 1) * sizeof(int)); // +1 for 1-based index
 
@@ -10,9 +13,9 @@ void Insert_Data(int **array, int *size) {
     scanf("%d", &value);
     (*array)[*size] = value;
 
-    // Max Heapify Up
     int i = *size;
     while (i > 1 && (*array)[i] > (*array)[i / 2]) {
+        complexity++;
         int temp = (*array)[i];
         (*array)[i] = (*array)[i / 2];
         (*array)[i / 2] = temp;
@@ -60,6 +63,7 @@ int main() {
         } else if (key == 'e' || key == 'E') {
             printf("Exiting the program.\n");
             free(array);
+            printf("Time complexity: %d\n", complexity);
             exit(EXIT_SUCCESS);
         } else if (key == 'd' || key == 'D') {
             display(array, size);
@@ -68,6 +72,7 @@ int main() {
             wrongKeyCount++;
             printf("Incorrect key. Try again...\n");
             if (wrongKeyCount == 3) {
+                printf("Time complexity: %d\n", complexity);
                 printf("You entered the wrong key three times. The program will now terminate.\n");
                 free(array);
                 exit(EXIT_FAILURE);
