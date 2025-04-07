@@ -1,4 +1,4 @@
-//Write a C Program to insert an element into heap, also compute time complexity for an input of size N.
+//Write a C Program to delete the N element, also compute time complexity for an input of size N.
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -34,11 +34,22 @@ void delete_Data(int **array, int *size) {
         return;
     }
 
-    (*array)[1] = (*array)[*size];
+    int position;
+    printf("Enter the position of the element to delete (1 to %d): ", *size);
+    scanf("%d", &position);
+
+    if (position < 1 || position > *size) {
+        printf("Invalid position.\n");
+        return;
+    }
+
+    (*array)[position] = (*array)[*size];
     *size -= 1;
     *array = (int *)realloc(*array, (*size + 1) * sizeof(int));
-    
-    heapIfy(array, size);
+
+    for (int i = position; i <= *size / 2; i++) {
+        heapIfy(array, size);
+    }
 }
 
 void display(int array[], int size) {
