@@ -1,4 +1,4 @@
-// Write a C Programming to print Fibonacci series upto n terms using iteration also compute time complexity.
+// Write a C Programming to print Fibonacci series upto n terms using Iteration also compute time complexity.
 
 #include <stdio.h>
 int count = 0;

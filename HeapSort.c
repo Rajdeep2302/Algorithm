@@ -1,0 +1,153 @@
+// Write a C Program to insert an element into heap, delete the root, and compute time complexity for an input of size N.
+#include <stdio.h>
+#include <stdlib.h>
+
+int complexity = 0;
+
+void Insert_Data(int **array, int *size)
+{
+    complexity++;
+    *size += 1;
+    *array = (int *)realloc(*array, (*size + 1) * sizeof(int)); // +1 for 1-based index
+
+    printf("Enter the value to insert: ");
+    int value;
+    scanf("%d", &value);
+    (*array)[*size] = value;
+
+    int i = *size;
+    while (i > 1 && (*array)[i] > (*array)[i / 2])
+    {
+        complexity++;
+        int temp = (*array)[i];
+        (*array)[i] = (*array)[i / 2];
+        (*array)[i / 2] = temp;
+        i = i / 2;
+    }
+}
+
+void Delete_All_Data(int **array, int *size)
+{
+    if (*size == 0)
+    {
+        printf("Heap is already empty.\n");
+        return;
+    }
+
+    printf("Deleting all elements from the heap:\n");
+    while (*size > 0)
+    {
+        printf("%d\t", (*array)[1]);
+        (*array)[1] = (*array)[*size];
+        *size -= 1;
+
+        int i = 1;
+        while (i * 2 <= *size)
+        {
+            complexity++;
+            int largest = i;
+            int left = i * 2;
+            int right = i * 2 + 1;
+
+            if (left <= *size && (*array)[left] > (*array)[largest])
+            {
+                largest = left;
+            }
+            if (right <= *size && (*array)[right] > (*array)[largest])
+            {
+                largest = right;
+            }
+            if (largest == i)
+            {
+                break;
+            }
+
+            int temp = (*array)[i];
+            (*array)[i] = (*array)[largest];
+            (*array)[largest] = temp;
+
+            i = largest;
+        }
+    }
+    printf("\nHeap is now empty.\n");
+}
+
+void display(int array[], int size)
+{
+    if (size == 0)
+    {
+        printf("Heap is empty.\n");
+        return;
+    }
+
+    printf("Heap Elements: ");
+    for (int i = 1; i <= size; i++)
+    {
+        printf("%d ", array[i]);
+    }
+    printf("\n");
+}
+
+int main()
+{
+    int *array = NULL;
+    array = (int *)malloc(sizeof(int) * 2);
+    int size = 1;
+
+    printf("Write the first value to insert: ");
+    scanf("%d", &array[1]);
+
+    char key;
+    int wrongKeyCount = 0;
+
+    while (1)
+    {
+        printf("\nMenu:\n");
+        printf("1. Press 'i' or 'I' to insert data.\n");
+        printf("2. Press 'e' or 'E' to exit the program.\n");
+        printf("3. Press 'd' or 'D' to display the heap.\n");
+        printf("4. Press 'r' or 'R' to sort the value.\n");
+        printf("Enter your choice: ");
+
+        // Consume newline before reading a character
+        while ((key = getchar()) == '\n')
+            ;
+
+        if (key == 'i' || key == 'I')
+        {
+            Insert_Data(&array, &size);
+            wrongKeyCount = 0;
+        }
+        else if (key == 'e' || key == 'E')
+        {
+            printf("Exiting the program.\n");
+            free(array);
+            printf("Time complexity: %d\n", complexity);
+            exit(EXIT_SUCCESS);
+        }
+        else if (key == 'd' || key == 'D')
+        {
+            display(array, size);
+            wrongKeyCount = 0;
+        }
+        else if (key == 'r' || key == 'R')
+        {
+            Delete_All_Data(&array, &size);
+            wrongKeyCount = 0;
+        }
+        else
+        {
+            wrongKeyCount++;
+            printf("Incorrect key. Try again...\n");
+            if (wrongKeyCount == 3)
+            {
+                printf("Time complexity: %d\n", complexity);
+                printf("You entered the wrong key three times. The program will now terminate.\n");
+                free(array);
+                exit(EXIT_FAILURE);
+            }
+        }
+    }
+
+    return 0;
+}
